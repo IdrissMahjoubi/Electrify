@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Line } from "react-chartjs-2";
 // import Battery from "../../components/Battery";
 import api from "../../../api";
+import { CLIENT_RENEG_LIMIT } from "tls";
+import axios from "axios";
 
 import {
   ButtonDropdown,
@@ -28,7 +30,6 @@ var myConsumption = [];
 var myBattery = [];
 var myLabels = [];
 
-
 // Main Chart
 
 class Dashboard extends Component {
@@ -49,12 +50,19 @@ class Dashboard extends Component {
       cardChartData2: {},
       cardChartOpts2: {},
       cardChartData3: {},
-      cardChartOpts3: {}
+      cardChartOpts3: {},
+      cardChartDataweather: {},
+      cardChartOptsweather: {},
+      consumption_rasp: -1,
+      temperature: -1,
+      humidity: -1
     };
   }
 
   async componentWillMount() {
     this.interval = setInterval(() => this.updateChart(), 60000);
+    this.interval = setInterval(() =>  this.updateWeather(), 5000);
+
     myProduction = [];
     myConsumption = [];
     myBattery = [];
@@ -268,6 +276,51 @@ class Dashboard extends Component {
       }
     } catch (error) {
       this.setState({ errorMsg: "Error !", visible: true });
+    }
+
+    // ---------------------------- weather skander--------------------------
+    console.log("Get initial data ");
+
+    axios
+      .get(`http://172.20.10.2:5000`)
+      .then(resWeather => {
+        console.log("Get inital data done");
+        console.log(resWeather.data);
+        const resjson = JSON.parse(resWeather.data);
+        const { humidity, temperature } = resWeather.data;
+      })
+      .catch(error => {
+        console.log("Catch from getting initial data (not connected) 1245");
+        // console.log(error);
+        this.setState({ humidity: 1254 });
+        this.setState({ temperature: 1254 });
+        this.setState({ consumption_rasp: 1254 });
+        this.interval = setInterval(() => this.updateWeather(), 2000);
+      });
+  }
+
+  updateWeather() {
+    console.log("Get data updated each 5 s changing to 555555");
+    this.setState({ temperature: 555555 });
+    this.setState({ humidity: 555555 });
+    this.setState({ consumption_rasp: 555555 });
+
+    const myTemp = [];
+    const myHumidity = [];
+    const resWeather = [];
+    try {
+      resWeather = axios.get(`http://172.20.10.2:5000`);
+      if (resWeather.data) {
+        console.log(resWeather.data.humidity);
+      }
+    } catch (error) {
+      console.log(
+        "not connected (catch from updater weather) changing to -10000"
+      );
+      // console.log(error);
+      this.setState({ temperature: -10000 });
+      this.setState({ humidity: -10000 });
+      this.setState({ consumption_rasp: -10000 });
     }
   }
 
@@ -618,6 +671,42 @@ class Dashboard extends Component {
           </Col>
           <Col xs="12" sm="6" lg="3">
             {/* <Battery /> */}
+          </Col>
+        </Row>
+
+        {/* temperature humidity  consumption_rasp */}
+        <Row>
+          <Col xs="12" sm="6" lg="3">
+            <Card style={{ maxHeight: 100 }} className="text-white bg-primary">
+              <CardBody className="pb-0 card-body">
+                <div className="text-value weather">
+                  <h3>{this.state.temperature}°C</h3>
+                  <h2>Temperature</h2>
+                </div>
+              </CardBody>
+            </Card>
+          </Col>
+
+          <Col xs="12" sm="6" lg="3">
+            <Card style={{ maxHeight: 100 }} className="text-white bg-primary">
+              <CardBody className="pb-0 card-body">
+                <div className="text-value weather">
+                  <h3>{this.state.humidity}%</h3>
+                  <h2>Humidity</h2>
+                </div>
+              </CardBody>
+            </Card>
+          </Col>
+
+          <Col xs="12" sm="6" lg="3">
+            <Card style={{ maxHeight: 100 }} className="text-white bg-primary">
+              <CardBody className="pb-0 card-body">
+                <div className="text-value weather">
+                  <h3>{this.state.consumption_rasp}Watt</h3>
+                  <h2>Consumption</h2>
+                </div>
+              </CardBody>
+            </Card>
           </Col>
         </Row>
       </div>
