@@ -18,6 +18,7 @@ contract Electrify {
         uint unitPrice; // price of 1KWh in ether
         uint quantity; // quantity in Whatts
         uint timestamp;
+        string offerId;
     }
 
     Transaction [] public  transactions;
@@ -27,12 +28,12 @@ contract Electrify {
     }
 
     // web3 socket not working in this beta version
-    event message(address,address,uint,uint,uint);
+    event message(address,address,uint,uint,uint,string);
 
     // send an amount of ether from the user that called this function to an address
-    function makeTransaction(address payable to, uint quantity) public payable returns(bool) {
+    function makeTransaction(address payable to, uint quantity ,string memory offerId ) public payable returns(bool) {
     require(msg.sender.balance >= msg.value && msg.value > 0.0001 ether);
-    emit message( msg.sender,to,msg.value,quantity,now);
+    emit message( msg.sender,to,msg.value,quantity,now,offerId);
 
 
      Transaction memory trans = Transaction({
@@ -40,7 +41,9 @@ contract Electrify {
          to: to,
          unitPrice: msg.value,
          quantity: quantity,
-         timestamp: now});
+         timestamp: now,
+         offerId: offerId
+         });
      transactions.push(trans);
      transCount++;
      to.transfer(msg.value);

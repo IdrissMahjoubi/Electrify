@@ -3,7 +3,8 @@ import jwt_decode from "jwt-decode";
 import {
   SET_CURRENT_USER,
   GET_ERRORS,
-  CLEAR_ERRORS
+  CLEAR_ERRORS,
+  SET_PROFILE
 } from "./types";
 import { setContractAction,clearContract } from './contractActions';
 // Register User
@@ -43,7 +44,33 @@ export const setCurrentUser = decoded => {
   };
 };
 
+// Set logged in user
+const setProfile = user => {
+  return {
+    type: SET_PROFILE,
+    payload: user
+  };
+};
 
+export const getProfile = (web3, walletAddress) => dispatch => {
+  let balance = 0;
+  web3.eth.getBalance(walletAddress, (err, _balance) => {
+     balance = _balance ;
+  });
+  axios.get(`user/wallet/${walletAddress}`).then((res) => {
+     balance = web3.utils.fromWei(balance, "ether");
+     res.data = {...res.data, balance};
+    dispatch(setProfile(res.data));
+  }).catch(err =>
+    dispatch({
+      type: GET_ERRORS,
+      payload: {
+        message: err.response.data,
+        visible: true
+      }
+    })
+  );
+}
 // Log user out
 export const logoutUser = () => dispatch => {
   localStorage.removeItem("token");

@@ -6,7 +6,6 @@ import {
   Col,
   Row,
   Table,
-  Button
 } from "reactstrap";
 
 import Trade from "../../components/Trade";
@@ -14,14 +13,13 @@ import { connect } from "react-redux";
 
 class MyTrades extends Component {
 
-  componentDidMount() {
-    console.log(this.props.transactions);
- }
-  toMyTransactions = () => {
-    this.props.history.push("/trades/my-trades");
+  componentWillMount() {
+    console.log(this.props.myTransactions); 
   }
+
+
   render() {
-    const { transactions } = this.props;
+    const { myTransactions } = this.props;
 
     return (
       <div className="animated fadeIn">
@@ -30,20 +28,11 @@ class MyTrades extends Component {
             <Card>
               <CardHeader>
                 <i className="cui-cart" /> All transactions made on the blockchain
-                <Button
-                  onClick={this.toMyTransactions}
-                  className="float-right ml-2 mr-2"
-                  color="info"
-                  outline
-                >
-                  <i className="fa fa-plus" />
-                  &nbsp;My Transactions
-                </Button>
               </CardHeader>
               <CardBody>
                 <Table hover striped responsive>
                   <thead>
-                    {transactions.length > 0 ? (
+                    {myTransactions.length > 0 ? (
                       <tr>
                         <th>From</th>
                         <th>To</th>
@@ -53,12 +42,12 @@ class MyTrades extends Component {
                       </tr>
                     ) : (
                       <tr>
-                        <th>There are no transactions yet.</th>
+                        <th>Loading Transactions</th>
                       </tr>
                     )}
                   </thead>
                   <tbody>
-                   {transactions.map((trans, index) => (
+                   {myTransactions.map((trans, index) => (
                       <Trade key={index} trans={trans} />
                   ))}
                   </tbody>
@@ -75,7 +64,7 @@ class MyTrades extends Component {
 }
 
 const mapStateToProps = state => ({
-  transactions: state.trans.transactions,
+  myTransactions: state.trans.myTransactions,
 });
 
 export default connect(

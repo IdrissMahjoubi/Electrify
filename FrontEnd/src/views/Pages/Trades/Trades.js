@@ -11,13 +11,11 @@ import {
 
 import Trade from "../../components/Trade";
 import { connect } from "react-redux";
-
+import { getTransactions } from "../../../actions/transactionsActions";
 class Trades extends Component {
 
-  
-  componentWillMount() {
-    console.log(this.props.transactions);
- }
+
+
   toMyTransactions = () => {
     this.props.history.push("/trades/my-trades");
   }
@@ -54,7 +52,7 @@ class Trades extends Component {
                       </tr>
                     ) : (
                       <tr>
-                        <th>There are no transactions yet.</th>
+                        <th>Loading Transactions</th>
                       </tr>
                     )}
                   </thead>
@@ -77,8 +75,11 @@ class Trades extends Component {
 
 const mapStateToProps = state => ({
   transactions: state.trans.transactions,
+  loadingtrans: state.trans.loadingtrans,
+  loading: state.contract.loading,
+  contract: state.contract.contract,
 });
 
 export default connect(
-  mapStateToProps,
+  mapStateToProps,{getTransactions}
 )(Trades);

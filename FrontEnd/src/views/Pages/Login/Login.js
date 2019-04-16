@@ -31,7 +31,7 @@ class Login extends Component {
     };
   }
 
-   async componentDidMount() {
+  componentDidMount() {
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/dashboard");
     }
@@ -59,6 +59,7 @@ class Login extends Component {
   };
 
   onSubmit = e => {
+    e.preventDefault();
     const userData = {
       username: this.state.username,
       password: this.state.password
@@ -78,7 +79,7 @@ class Login extends Component {
                 <Card className="p-4">
                   <CardBody>
                     {/* <Form onSubmit={e => this.connectUser(e)}> */}
-                    <Form>
+                    <Form onSubmit={(e) => this.onSubmit(e)}>
                       <h1>Login</h1>
                       <p className="text-muted">Sign In to your account</p>
                       <p className="text-muted">
@@ -131,7 +132,6 @@ class Login extends Component {
                       <Row>
                         <Col xs="6">
                           <Button
-                            onClick={this.onSubmit}
                             color="primary"
                             className="px-4"
                             name="connectButton"

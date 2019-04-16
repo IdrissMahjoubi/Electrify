@@ -5,7 +5,8 @@ import {
   DropdownMenu,
   DropdownToggle,
   Nav,
-  NavItem
+  NavItem,
+  Badge
 } from "reactstrap";
 import PropTypes from "prop-types";
 
@@ -46,82 +47,9 @@ class DefaultHeader extends Component {
     this.props.history.push("/login");
   };
 
-  // async getNbrMyTransaction(contract, user) {
-  //   const totalTrans = await contract.methods.transCount().call();
-
-  //   let transactions = 0;
-
-  //   for (let i = 0; i < totalTrans; i++) {
-  //     const tr = await contract.methods.transactions(i).call();
-
-  //     const trans = {
-  //       from: tr[0],
-  //       to: tr[1]
-  //     };
-  //     if (trans.from === user.walletAddress) transactions++;
-  //   }
-  //   return transactions;
-  // }
-
-  // async componentDidMount() {
-  //   let user = this.props.user;
-  //   const { contract } = await getContract();
-
-  //   if (user) {
-  //     const { id, avatar, email, walletAddress } = user;
-  //     const nbrPayments = await this.getNbrMyTransaction(contract, user);
-  //     this.setState({ id, avatar, email, walletAddress, nbrPayments });
-  //   }
-
-  //   contract.events
-  //     .message()
-  //     .on("data", async event => {
-  //       let time = new Date(event.returnValues[4] * 1000).toLocaleString();
-  //       // time = time.format
-  //       const trans = {
-  //         from: event.returnValues[0],
-  //         to: event.returnValues[1],
-  //         unitPrice: event.returnValues[1],
-  //         quantity: event.returnValues[3],
-  //         time
-  //       };
-
-  //       if (trans.to === this.state.walletAddress) {
-  //         // get notifications
-  //         new Audio(beep).play();
-
-  //         const notifs = this.state.notif;
-  //         notifs.unshift(trans);
-  //         notifs.slice(-4); // get only last 4 notifs
-
-  //         //get nbr payements
-  //         const nbrPayments = await this.getNbrMyTransaction(contract, user);
-
-  //         this.setState({
-  //           notif: notifs,
-  //           badgeVisible: true,
-  //           badgeCount: this.state.badgeCount + 1,
-  //           nbrPayments
-  //         });
-
-  //         console.log("trnsaction confrimed !");
-  //       }
-  //     })
-  //     .on("error", console.error);
-  // }
-
-
-
-  // componentWillReceiveProps(nextProps) {
-  //     this.notify(nextProps.transactions);
-  // }
-
-  handleClickBell = () => {
-    this.setState({badgeVisible: false});
-  };
   handleProfil = () => {
-    // eslint-disable-next-line no-restricted-globals
-    //location.href = `/users/${this.state.walletAddress}`;
+    const {user} = this.props;
+    this.props.history.push("/users/" + user.walletAddress);
   };
 
   render() {
@@ -168,10 +96,15 @@ class DefaultHeader extends Component {
                 <strong>Account Settings</strong>
               </DropdownItem>
               <DropdownItem onClick={this.handleProfil}>
-                <i className="fa fa-user" /> Profile
+                <i className="fa fa-user" /> 
+                Profile
               </DropdownItem>
               <DropdownItem>
                 <i className="fa fa-wrench" /> Settings
+              </DropdownItem>
+              <DropdownItem>
+                <i className="fa fa-usd" /> Payments
+                <Badge color="primary">{this.props.myTransactions.length}</Badge>
               </DropdownItem>
               <DropdownItem onClick={this.onLogoutClick}>
                 <i className="fa fa-lock" /> Logout
@@ -191,7 +124,7 @@ DefaultHeader.defaultProps = defaultProps;
 
 const mapStateToProps = state => ({
   user: state.auth.user,
-  transactions: state.trans.transactions
+  myTransactions: state.trans.myTransactions
 });
 
 export default connect(

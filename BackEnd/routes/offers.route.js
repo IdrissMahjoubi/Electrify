@@ -25,13 +25,13 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
 
 router.post('/confirm/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
   OfferModel.findById(req.params.id, (err, doc) => {
-    if (!err) {
       doc.status = "Passed";
       doc.save().then(
         offer => res.json(offer)
       )    
-    }
-    res.json(err);
+    .catch( err =>
+      res.status(400).json(err)
+   )
 
   });
 });

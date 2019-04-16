@@ -3,9 +3,7 @@ import { Link } from "react-router-dom";
 
 class Trade extends Component {
 
-  componentWillMount() {
-    console.log("single " + this.props.trans.from);
-  }
+
   render() {
     const { trans } = this.props;
     return (
@@ -20,7 +18,7 @@ class Trade extends Component {
       </td>
       <td className="align-middle">{trans.quantity}</td>
       <td className="align-middle">{trans.unitPrice}</td>
-      <td className="align-middle">{trans.date}</td>
+      <td className="align-middle">{new Date(trans.date).toLocaleString()}</td>
     </tr>
     );
   }

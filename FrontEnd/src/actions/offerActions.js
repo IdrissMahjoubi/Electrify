@@ -39,21 +39,16 @@ export const buyOffer = (contract,offer,user) => dispatch => {
   const ether = 1000000000000000000;
   if (contract) {
         contract.methods
-        .makeTransaction(offer.from, offer.quantity)
+        .makeTransaction(offer.from, offer.quantity,offer._id)
         .send({
           value: (offer.quantity / 1000) * offer.unitPrice * ether
         })
-        .on('transactionHash', (hash) => {
-      })
-      .on('confirmation', (confirmationNumber, receipt) => {
-        confirmTransaction(offer._id, dispatch);
-      })
       }
 };
 
 
 
-const confirmTransaction = (id,dispatch) => {
+export const confirmTransaction = (id,dispatch) => {
   axios
     .post(`offers/confirm/${id}`)
   .then(res => {
@@ -74,6 +69,7 @@ const confirmTransaction = (id,dispatch) => {
     }
   })
 }
+
 export const getOffers = () => dispatch => {
   dispatch(setOfferLoading());
   axios

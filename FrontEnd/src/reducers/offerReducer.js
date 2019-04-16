@@ -59,7 +59,8 @@ export default function(state = initialState, action) {
     case BUY_OFFER: 
       return {
         ...state,
-        offers: state.offers.map(offer => (offer._id === action.payload._id) ? offer = {...action.payload} : offer)
+        offers: state.offers.map(offer => (offer._id === action.payload._id) ? offer = action.payload : offer),
+        myOffers: state.myOffers.map(offer => (offer._id === action.payload._id) ? offer = action.payload : offer)
       };
     default:
       return state;
