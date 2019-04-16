@@ -11,11 +11,11 @@ class User extends Component {
     }
   }
 
-  // static getDerivedStateFromProps(nextProps, prevState){
-  //   if (nextProps.web3) {
-  //     return nextProps.getProfile(nextProps.web3, nextProps.match.params.id);
-  //   } else return null;
-  // }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.web3 !== this.props.web3 || nextProps.match.params.id !== this.props.match.params.id) {
+      this.props.getProfile(nextProps.web3, nextProps.match.params.id);
+    }
+  }
 
   render() {
     const { user } = this.props;

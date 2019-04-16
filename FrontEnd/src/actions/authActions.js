@@ -53,23 +53,13 @@ const setProfile = user => {
 };
 
 export const getProfile = (web3, walletAddress) => dispatch => {
-  let balance = 0;
-  web3.eth.getBalance(walletAddress, (err, _balance) => {
-     balance = _balance ;
-  });
   axios.get(`user/wallet/${walletAddress}`).then((res) => {
-     balance = web3.utils.fromWei(balance, "ether");
+    web3.eth.getBalance(walletAddress, (err, _balance) => {   
+     const balance = web3.utils.fromWei(_balance.toString(), "ether");
      res.data = {...res.data, balance};
-    dispatch(setProfile(res.data));
-  }).catch(err =>
-    dispatch({
-      type: GET_ERRORS,
-      payload: {
-        message: err.response.data,
-        visible: true
-      }
-    })
-  );
+     dispatch(setProfile(res.data));
+    });
+  })
 }
 // Log user out
 export const logoutUser = () => dispatch => {

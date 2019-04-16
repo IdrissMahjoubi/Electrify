@@ -5,8 +5,7 @@ import {
   DropdownMenu,
   DropdownToggle,
   Nav,
-  NavItem,
-  Badge
+  NavItem
 } from "reactstrap";
 import PropTypes from "prop-types";
 
@@ -21,7 +20,6 @@ import {connect} from "react-redux";
 import {logoutUser} from "../../actions/authActions";
 import logo from "../../assets/img/brand/logo.svg";
 import sygnet from "../../assets/img/brand/sygnet.svg";
-// import beep from "../../assets/beep.mp3";
 
 import "toasted-notes/src/styles.css";
 
@@ -32,14 +30,6 @@ const propTypes = {
 const defaultProps = {};
 
 class DefaultHeader extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      soundFile: "../../assets/beep.mp3",
-      badgeVisible: true
-    };
-  }
 
   onLogoutClick = e => {
     e.preventDefault();
@@ -51,6 +41,7 @@ class DefaultHeader extends Component {
     const {user} = this.props;
     this.props.history.push("/users/" + user.walletAddress);
   };
+
 
   render() {
     const {user} = this.props;
@@ -102,10 +93,6 @@ class DefaultHeader extends Component {
               <DropdownItem>
                 <i className="fa fa-wrench" /> Settings
               </DropdownItem>
-              <DropdownItem>
-                <i className="fa fa-usd" /> Payments
-                <Badge color="primary">{this.props.myTransactions.length}</Badge>
-              </DropdownItem>
               <DropdownItem onClick={this.onLogoutClick}>
                 <i className="fa fa-lock" /> Logout
               </DropdownItem>
@@ -124,7 +111,6 @@ DefaultHeader.defaultProps = defaultProps;
 
 const mapStateToProps = state => ({
   user: state.auth.user,
-  myTransactions: state.trans.myTransactions
 });
 
 export default connect(

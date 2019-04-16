@@ -6,20 +6,20 @@ import {
   CLEAR_CONTRACT
 } from "./types";
 import getContract from "../utils/getContract";
-import {setTransactionAction, getTransactions} from "./transactionsActions";
+import {setTransactionAction} from "./transactionsActions";
 
 export const setContractAction = () => dispatch => {
   dispatch(setContractLoading());
   getContract
     .then(data => {
-      const {web3} = data;
+      const {web3,contract} = data;
       web3.eth.getAccounts().then(dataAccount => {
         const account = dataAccount[0];
         web3.eth.defaultAccount = account;
-
-        dispatch(contractAction(data));
-        dispatch(setTransactionAction(data.contract, web3, account));
-        dispatch(getTransactions(data.contract, web3, account));
+        contract.methods.transCount().call().then((nbrTransactions) => {
+          dispatch(contractAction(data,parseInt(nbrTransactions._hex,16)));
+          dispatch(setTransactionAction(data.contract, web3, account));
+        });
       });
     })
     .catch(error => {
@@ -35,13 +35,14 @@ export const setContractAction = () => dispatch => {
     });
 };
 
-const contractAction = (data) => {
+const contractAction = (data,nbrTransactions) => {
   return {
     type: GET_CONTRACT,
     payload: {
       contract: data.contract,
       web3: data.web3,
       account: data.web3.eth.defaultAccount,
+      nbrTransactions
     }
   };
 };

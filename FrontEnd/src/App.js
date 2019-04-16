@@ -8,7 +8,6 @@ import {Provider} from "react-redux";
 import store from "./store";
 import {setCurrentUser, logoutUser} from "./actions/authActions";
 import {setContractAction, clearContract} from "./actions/contractActions";
-
 const loading = () => <div className="sk-rotating-plane" />;
 
 // Containers
@@ -32,7 +31,6 @@ const Page404 = Loadable({
   loader: () => import("./views/Pages/Page404/Page404"),
   loading
 });
-
 
 
 if (localStorage.token) {
