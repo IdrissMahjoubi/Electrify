@@ -4,7 +4,7 @@ import {
 import toaster from "toasted-notes";
 
 const initialState = {
-  transactions:[{from:"asd",to:"asd",unitPrice:23,quantity:23,date:"12/12/12"}]
+  transactions:[]
 };
 
 const notify = trans => {
