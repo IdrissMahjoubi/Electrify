@@ -1,10 +1,12 @@
+import beep from "../assets/transfer.mp3";
+
 import {
   SET_TRANSACTION,
   SET_TRANSACTIONS,
   TRANS_LOADING
 } from "../actions/types";
-import toaster from "toasted-notes";
 
+import toaster from "toasted-notes";
 const initialState = {
   transactions: [],
   myTransactions: [],
@@ -12,6 +14,7 @@ const initialState = {
 };
 
 const notify = trans => {
+  new Audio(beep).play();
   toaster.notify("Transaction of "+trans.quantity+" Kwh with the price of "+trans.unitPrice +" Ether", {
   position: 'top-right',
 });
@@ -21,8 +24,8 @@ export default function(state = initialState, action) {
   switch (action.type) {
     case SET_TRANSACTION:
       let tran = [];
-      notify(action.payload.transaction);
       if (action.payload.account === action.payload.transaction.from || action.payload.account === action.payload.transaction.to) {
+        notify(action.payload.transaction);
          tran = [...state.myTransactions,action.payload.transaction]
       }
       return {

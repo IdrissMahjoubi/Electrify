@@ -11,7 +11,6 @@ export const setTransactionAction = (contract,web3,account) => dispatch => {
   const messageEvent = contract.events.message();
 
   messageEvent.on("data", event => {    
-   let time = new Date(event.returnValues[4] * 1000).toLocaleString();
 
    const trans = {
      from: event.returnValues[0],
@@ -19,7 +18,7 @@ export const setTransactionAction = (contract,web3,account) => dispatch => {
      unitPrice: web3.utils.fromWei(parseInt(event.returnValues[2]._hex, 16).toString(),"ether"),
      quantity: parseInt(event.returnValues[3]._hex, 16) / 1000,
      offerId: event.returnValues[5],
-     date:time
+     date:event.returnValues[4] * 1000
     };
 
     dispatch(transactionAction(trans,account));

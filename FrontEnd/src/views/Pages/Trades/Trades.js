@@ -6,7 +6,8 @@ import {
   Col,
   Row,
   Table,
-  Button
+  Button,
+  Badge
 } from "reactstrap";
 
 import Trade from "../../components/Trade";
@@ -15,29 +16,46 @@ import { getTransactions } from "../../../actions/transactionsActions";
 class Trades extends Component {
 
 
+  componentDidMount() {
+    if (this.props.contract) {
+      this.props.getTransactions(this.props.contract, this.props.web3, this.props.account);
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.contract !== this.props.contract) {
+      this.props.getTransactions(nextProps.contract, nextProps.web3, nextProps.account);
+    }
+  }
 
   toMyTransactions = () => {
     this.props.history.push("/trades/my-trades");
   }
   render() {
-    const { transactions } = this.props;
+    const { transactions,myTransactions } = this.props;
 
     return (
       <div className="animated fadeIn">
         <Row>
           <Col>
             <Card>
-              <CardHeader>
-                <i className="cui-cart" /> All transactions made on the blockchain
-                <Button
+              <CardHeader> 
+                <h3>
+                There Are &nbsp;
+                <Badge color="warning">{transactions.length}</Badge> &nbsp; 
+                  Transactions
+                  <Button
                   onClick={this.toMyTransactions}
-                  className="float-right ml-2 mr-2"
+                  className="float-right"
                   color="info"
                   outline
                 >
                   <i className="fa fa-plus" />
-                  &nbsp;My Transactions
+                  &nbsp;My Transactions &nbsp;
+                  <Badge color="info">{myTransactions.length}</Badge> 
                 </Button>
+                  </h3>
+
               </CardHeader>
               <CardBody>
                 <Table hover striped responsive>
@@ -75,9 +93,11 @@ class Trades extends Component {
 
 const mapStateToProps = state => ({
   transactions: state.trans.transactions,
-  loadingtrans: state.trans.loadingtrans,
-  loading: state.contract.loading,
+  myTransactions: state.trans.myTransactions,
   contract: state.contract.contract,
+  web3: state.contract.web3,
+  account: state.contract.account,
+
 });
 
 export default connect(

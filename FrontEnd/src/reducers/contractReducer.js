@@ -5,7 +5,8 @@ const initialState = {
   web3: null,
   account: null,
   loading: false,
-  transactions: []
+  transactions: [],
+  nbrTransactions:0
 };
 
 export default function(state = initialState, action) {
@@ -21,6 +22,7 @@ export default function(state = initialState, action) {
         contract: action.payload.contract,
         web3: action.payload.web3,
         account: action.payload.account,
+        nbrTransactions: action.payload.nbrTransactions,
         loading: false
       };
     case CLEAR_CONTRACT:
